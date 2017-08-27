@@ -18,6 +18,7 @@ class GameMapImage extends React.Component {
                 draggable="true"
                 dragBoundFunc={this.dragBounds}
                 image={this.state.image}
+                onClick={this.props.clickEvent}
             />
         )
     }
@@ -57,6 +58,7 @@ class App extends React.Component {
     constructor (props) {
         super(props);
         this.mouseWheel = this.mouseWheel.bind(this);
+        this.gameMapImageClick = this.gameMapImageClick.bind(this);
         this.state = {stageElement: null}
     }
 
@@ -64,7 +66,7 @@ class App extends React.Component {
         <div style={{width: "100vw", height: "100vh", overflowX: 'hidden', overflowY: 'hidden', position: "absolute"}}>
             <Stage ref="mainStage" width={3000} height={4200} onWheel={this.mouseWheel}>
                 <Layer>
-                    <GameMapImage mainStage={this.state.stageElement}/>
+                    <GameMapImage mainStage={this.state.stageElement} clickEvent={this.gameMapImageClick} />
                 </Layer>
             </Stage>
         </div>
@@ -75,7 +77,7 @@ class App extends React.Component {
     }
 
     mouseWheel (e) {
-        let scaleBy = 1.01;
+        let scaleBy = 1.05;
 
         let mainStage = this.refs.mainStage.getStage();
         let oldScale = mainStage.scaleX();
@@ -85,7 +87,7 @@ class App extends React.Component {
             y: mainStage.getPointerPosition().y / oldScale - mainStage.y() / oldScale,
         };
 
-        let newScale = e.evt.deltaY > 0 ? Math.min(2, oldScale * scaleBy) : Math.max(0.5, oldScale / scaleBy); // Min Max for zooms hard coded here.
+        let newScale = e.evt.deltaY < 0 ? Math.min(2, oldScale * scaleBy) : Math.max(0.5, oldScale / scaleBy); // Min Max for zooms hard coded here.
         mainStage.scale({ x: newScale, y: newScale });
 
         let newPos = {
@@ -95,6 +97,13 @@ class App extends React.Component {
 
         mainStage.position(newPos);
         mainStage.batchDraw();
+        console.log(mainStage.position())
+    }
+
+    gameMapImageClick (e) {
+        let mainStage = this.refs.mainStage.getStage();
+        console.log("X: ");
+        console.log(mainStage.position())
     }
 }
 
