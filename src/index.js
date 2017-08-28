@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import {Layer, Stage, Image} from 'react-konva';
 
-import trialImageSRC from './trial.jpg'
+import trialImageSRC from './game_map.png'
 
 class GameMapImage extends React.Component {
     constructor(props) {
